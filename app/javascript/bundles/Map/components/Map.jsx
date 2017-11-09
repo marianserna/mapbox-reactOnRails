@@ -1,9 +1,10 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import ReactMapGL from 'react-map-gl';
 
 export default class Map extends React.Component {
   static propTypes = {
-    name: PropTypes.string.isRequired, // this is passed from the Rails view
+    name: PropTypes.string.isRequired // this is passed from the Rails view
   };
 
   /**
@@ -12,33 +13,28 @@ export default class Map extends React.Component {
   constructor(props) {
     super(props);
 
-    // How to set initial state in ES6 class syntax
-    // https://facebook.github.io/react/docs/reusable-components.html#es6-classes
-    this.state = { name: this.props.name };
+    this.state = {
+      viewport: {
+        width: window.innerWidth,
+        height: window.innerHeight,
+        latitude: 37.7577,
+        longitude: -122.4376,
+        zoom: 10
+      }
+    };
   }
-
-  updateName = (name) => {
-    this.setState({ name });
-  };
 
   render() {
     return (
       <div>
-        <h3>
-          Hello, {this.state.name}!
-        </h3>
-        <hr />
-        <form >
-          <label htmlFor="name">
-            Say hello to:
-          </label>
-          <input
-            id="name"
-            type="text"
-            value={this.state.name}
-            onChange={(e) => this.updateName(e.target.value)}
-          />
-        </form>
+        <ReactMapGL
+          {...this.state.viewport}
+          mapboxApiAccessToken="pk.eyJ1IjoibWFyaWFuc2VybmEiLCJhIjoiY2o5c2pnZWtqMHIxcTJxcXF5M2QwMnk4YiJ9.ZqdTsqD_v8BX1tR8dGQxBA"
+          mapStyle="mapbox://styles/marianserna/cj9niotu73i7t2rs1mt2t14sy"
+          onViewportChange={viewport => {
+            this.setState({ viewport });
+          }}
+        />
       </div>
     );
   }
